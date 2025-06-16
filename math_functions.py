@@ -2,11 +2,11 @@ import math
 
 def calculate_determinant(A:list[list[int]]): # Laplace Method
   det = 0
-  if (len(A) == 1):
+  if len(A) == 1:
     det = A[0][0]
-  elif (len(A) == 2):
+  elif len(A) == 2:
     det = A[0][0]*A[1][1] - A[0][1]*A[1][0]
-  elif (len(A) == 3):
+  elif len(A) == 3:
     det = A[0][0]*A[1][1]*A[2][2] + A[0][1]*A[1][2]*A[2][0] + A[0][2]*A[1][0]*A[2][1] - A[0][2]*A[1][1]*A[2][0] - A[0][1]*A[1][0]*A[2][2] - A[0][0]*A[1][2]*A[2][1]
   else:
     for i in range(len(A)):
@@ -42,7 +42,7 @@ def transpose_matrix(matrix):
   return transposed
 
 
-def multiply_matrix(A:list[list[int]], B):
+def multiply_matrix(A, B):
   if type(B[0]) != list:
     B = augment_matrix(B)
   if type(A[0]) != list:
@@ -51,8 +51,8 @@ def multiply_matrix(A:list[list[int]], B):
   print(f"A: {len(A)}x{len(A[0])}")
   print(f"B: {len(B)}x{len(B[0])}")
 
-  if (len(A[0]) != len(B)):
-    print(f"Erro - Matrizes nao multiplicaveis / A: {len(A[0])} / B: {len(B)}")
+  if len(A[0]) != len(B):
+    print(f"Erro - Matrizes não multiplicáveis / A: {len(A[0])} / B: {len(B)}")
     return None
 
   matrix = [[0 for _ in range(len(B[0]))] for _ in range(len(A))]
@@ -68,7 +68,7 @@ def multiply_matrix(A:list[list[int]], B):
   return matrix
 
 
-def inverse_matrix(A):  # Entender essa função
+def inverse_matrix(A):
     n = len(A)
     if calculate_determinant(A) == 0:
       return -1
