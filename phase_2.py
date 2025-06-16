@@ -1,5 +1,7 @@
-def verify_b_n(Bi, Ni, l, all_idx):
+import random
+import math_functions as mf
 
+def verify_matrix_b_n(Bi, Ni, l, all_idx, A):
   idx = [i for i in range(len(A[0]))]
   random.shuffle(idx)
 
@@ -9,15 +11,15 @@ def verify_b_n(Bi, Ni, l, all_idx):
   for idx in all_idx:
     if idx == sorted(Ni):
       print(f"Ni: {Ni} are in all_idx: {all_idx}. Alterando...")
-      Bi, Ni = verify_b_n(Bi, Ni, l, all_idx)
+      Bi, Ni = verify_matrix_b_n(Bi, Ni, l, all_idx, A)
       break
   return Bi, Ni
 
 
-def matrix_b_n(A, l, all_idx):       # Verificar det de B
+def create_matrix_b_n(A, l, all_idx):
   B, Bi, N, Ni = [], [], [], []
 
-  Bi, Ni = verify_b_n(Bi, Ni, l, all_idx)
+  Bi, Ni = verify_matrix_b_n(Bi, Ni, l, all_idx, A)
   all_idx.append(sorted(Ni))
 
   print(f"Bi: {Bi}")
@@ -42,24 +44,24 @@ def matrix_b_n(A, l, all_idx):       # Verificar det de B
   return B, N, Bi, Ni, all_idx
 
 
-def passo_1(B, b):
-  B_1 = inverse_matrix(B)
-  xb_aprox = multiply_matrix(B_1, b)
+def step_1(B, b):
+  B_1 = mf.inverse_matrix(B)
+  xb_aprox = mf.multiply_matrix(B_1, b)
   print(f"xb_aprox: {xb_aprox}")
 
   xn_aprox = 0
   return xb_aprox, xn_aprox
 
 
-def passo_2(c, Bi, B, Ni, N):
-  B_1 = inverse_matrix(B)
+def step_2(c, Bi, B, Ni, N):
+  B_1 = mf.inverse_matrix(B)
   print(f"B_1: {B_1}")
   cbt = []
   cnt = []
   cnt_aprox = []
   k = -1
   print(f"N: {N}")
-  Nt = augment_matrix(N)
+  Nt = mf.augment_matrix(N)
   print(f"Nt: {Nt}")
 
   for i in range(len(c)):
@@ -70,11 +72,11 @@ def passo_2(c, Bi, B, Ni, N):
 
   print(f"cbt: {cbt}")
   print(f"cnt: {cnt}")
-  vms = multiply_matrix([cbt], B_1)
+  vms = mf.multiply_matrix([cbt], B_1)
   print(f"vms: {vms}")
 
   for i in range(len(Ni)):
-    aux = cnt[i] - multiply_matrix(vms[0], Nt[i])[0][0]
+    aux = cnt[i] - mf.multiply_matrix(vms[0], Nt[i])[0][0]
     print(f"aux: {aux}")
     cnt_aprox.append(aux)
     if cnt_aprox[i] < 0:
@@ -87,23 +89,23 @@ def passo_2(c, Bi, B, Ni, N):
   return k
 
 
-def passo_3(k:int):
+def step_3(k):
   if k == -1:
     return True
   else:
     return False
 
-def passo_4(B, N, k):
+def step_4(B, N, k):
   print(f"N: {N}")
-  N = transpose_matrix(N)
+  N = mf.transpose_matrix(N)
   print(f"Nt: {N}")
-  B = inverse_matrix(B)
-  y = multiply_matrix(B, N[k])
+  B = mf.inverse_matrix(B)
+  y = mf.multiply_matrix(B, N[k])
   print(f"y: {y}")
   return y
 
 
-def passo_5(xb_aprox, y):
+def step_5(xb_aprox, y):
   e_aprox = []
   aux = 0
   for i in range(len(xb_aprox)):
@@ -122,41 +124,41 @@ def passo_5(xb_aprox, y):
   return e_aprox, index_e
 
 
-def passo_6(A, N, Ni, B, Bi, index_k, index_e):
+def step_6(A, N, Ni, B, Bi, index_k, index_e):
   Ni = Ni[index_k]
   Bi = Bi[index_e]
 
-  N_t = transpose_matrix(N)
-  B_t = transpose_matrix(B)
-  A_t = transpose_matrix(A)
+  N_t = mf.transpose_matrix(N)
+  B_t = mf.transpose_matrix(B)
+  A_t = mf.transpose_matrix(A)
 
   N_t[index_k] = A_t[Ni]
   B_t[index_e] = A_t[Bi]
 
-  N = transpose_matrix(N_t)
-  B = transpose_matrix(B_t)
+  N = mf.transpose_matrix(N_t)
+  B = mf.transpose_matrix(B_t)
 
   return N, B
 
 
-def fase_2(A, b, c, l):
+def phase_2(A, b, c, l):
   cont = 1
   all_idx = []
   while cont < 6:
     print(f"Iteração: {cont}")
-    B, N, Bi, Ni, all_idx = matrix_b_n(A, l, all_idx)
-    while calculate_determinant(B) == 0:
-      print(f"Determinante da matriz Básica == {calculate_determinant(B)}. Alterando...")
-      B, N, Bi, Ni, all_idx = matrix_b_n(A, l, all_idx)
-    print(f"Determinante de B: {calculate_determinant(B)}")
+    B, N, Bi, Ni, all_idx = create_matrix_b_n(A, l, all_idx)
+    while mf.calculate_determinant(B) == 0:
+      print(f"Determinante da matriz Básica == {mf.calculate_determinant(B)}. Alterando...")
+      B, N, Bi, Ni, all_idx = create_matrix_b_n(A, l, all_idx)
+    print(f"Determinante de B: {mf.calculate_determinant(B)}")
 
-    xb_aprox, xn_aprox = passo_1(B, b)
-    k = passo_2(c, Bi, B, Ni, N)
-    if passo_3(k):
+    xb_aprox, xn_aprox = step_1(B, b)
+    k = step_2(c, Bi, B, Ni, N)
+    if step_3(k):
       break
-    y = passo_4(B, N, k)
-    e_aprox, index_e = passo_5(xb_aprox, y)
-    N, B = passo_6(A, N, Ni, B, Bi, k, index_e)
+    y = step_4(B, N, k)
+    e_aprox, index_e = step_5(xb_aprox, y)
+    N, B = step_6(A, N, Ni, B, Bi, k, index_e)
     cont += 1
 
   print(f"Bi: {Bi}")

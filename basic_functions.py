@@ -1,18 +1,18 @@
-def initVar() -> int:
+def init_var(txt):
   c, l = 0, 0
   sig_ig = []
-  max = False
+  max_min = False
 
-  arquivo = open("input.txt", "r")
+  arquivo = open(txt, "r")
   linha = arquivo.readline()
 
   if linha.find("max") != -1:
     print("achei o max")
-    max = True
+    max_min = True
   else:
     print("achei o min")
 
-  if max:
+  if max_min:
     var = linha.count('x') - 1
   else:
     var = linha.count('x')
@@ -42,10 +42,12 @@ def initVar() -> int:
   print(f"Linhas: {l}\nVariaveis de folga: {c}")
   c += var
   arquivo.close()
-  return max, l, c, var
+  return max_min, l, c, var
 
 
-def initMatrix(l: int, c: int, var: int) -> list[list[int]]:
+def init_matrix(txt):
+  max_min, l, c, var = init_var(txt)
+
   lin, signal, aux, var_ind = 0, 1, 0, 0
 
   A = [[0.0 for _ in range(c)] for _ in range(l)]
@@ -150,4 +152,4 @@ def initMatrix(l: int, c: int, var: int) -> list[list[int]]:
   print(f"Vetor b: {b}")
   print(f"Vetor c: {c}")
 
-  return A, b, c
+  return A, b, c, l, max_min
